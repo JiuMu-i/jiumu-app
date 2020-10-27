@@ -54,7 +54,7 @@ export default {
       light.position.set(600, 600, 600)
       this.scene.add(light)
     },
-    initObject () { // 几何体
+    initObject () { // 初始化几何体
       /* 太阳 */
       const sun = new Three.SphereGeometry(100, 100, 100)
       new Three.TextureLoader()
