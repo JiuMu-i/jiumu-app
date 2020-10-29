@@ -1,5 +1,13 @@
 <template>
   <div>
+    <div class="logo">
+      <embed
+        :src="logo_url"
+        type="image/svg+xml"
+        width="50"
+        height="50"
+        style="margin: -6px 0 0 -5px;"/>
+    </div>
     <login-component></login-component>
     <universe></universe>
   </div>
@@ -14,10 +22,21 @@ export default{
   components: {
     LoginComponent,
     Universe
+  },
+  data () {
+    return {
+      logo_url: require('../assets/logo.svg')
+    }
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="sass" scoped>
+.logo
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  margin: 30px 0 0 40px;
+  border-radius: 50px;
+  background: #000000;
 </style>
