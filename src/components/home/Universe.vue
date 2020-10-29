@@ -5,11 +5,15 @@
 <script>
 import * as Three from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import Stats from 'stats.js/src/Stats'
+import { eventBus } from '../../main'
+import SpeedControl from '../../assets/js/util/speedControl'
 
 export default {
   name: 'universe',
   data () {
     return {
+      stats: null, // 性能监测对象
       scene: null, // 场景对象
       camera: null, // 照相机对象
       renderer: null, // 渲染对象
@@ -23,6 +27,11 @@ export default {
       textureImg5: require('../../assets/img/universe_5.jpg'),
       textureImg6: require('../../assets/img/universe_6.jpg')
     }
+  },
+  created () {
+    eventBus.$on('removePerspective', target => {
+      this.updatePerspective(target)
+    })
   },
   mounted () {
     this.init()
@@ -100,16 +109,44 @@ export default {
       this.initRenderer()
       this.initCamera()
       this.initLight()
+      this.initStats()
       // 控制器
       this.controls = new OrbitControls(this.camera, this.renderer.domElement)
       this.controls.enableDamping = true
       this.controls.target = new Three.Vector3(100, 10, 0)
     },
     render () { // 渲染
+      this.stats.update()
       this.earthGroup.rotation.y += 0.001
       this.renderer.render(this.scene, this.camera)
       this.controls.update()
       requestAnimationFrame(this.render)
+    },
+    initStats () { // 初始化性能监测插件
+      this.stats = new Stats()
+      // 设置统计模式
+      this.stats.setMode(1) // 0: FPS, 1: ms, 2: 内存
+      // 统计信息显示位置
+      this.stats.domElement.style.position = 'absolute'
+      this.stats.domElement.style.left = '0px'
+      this.stats.domElement.style.top = '100px'
+      document.body.appendChild(this.stats.domElement)
+    },
+    updatePerspective (target) { // 移动相机视角
+      console.log(target)
+      switch (target) {
+        case 0: {
+          new SpeedControl().uniformSpeed().map(item => {
+            this.camera.position.set(item, 0, 0)
+            console.log(item)
+          })
+          this.controls.target = new Three.Vector3(0, 0, 0)
+          break
+        }
+        default: {
+          break
+        }
+      }
     }
   }
 }

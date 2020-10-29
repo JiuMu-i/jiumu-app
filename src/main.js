@@ -3,6 +3,7 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
+import store from './store'
 import axios from 'axios'
 // element-ui
 import ElementUI from 'element-ui'
@@ -24,10 +25,13 @@ fontawesome.library.add(regular)
 fontawesome.library.add(brands)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
+export const eventBus = new Vue()
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })
