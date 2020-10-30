@@ -6,6 +6,7 @@
 import * as Three from 'three'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 import Stats from 'stats.js/src/Stats'
+import * as dat from 'dat.gui'
 import { eventBus } from '../../main'
 import SpeedControl from '../../assets/js/util/speedControl'
 
@@ -17,8 +18,11 @@ export default {
       scene: null, // 场景对象
       camera: null, // 照相机对象
       renderer: null, // 渲染对象
-      controls: null, // 控制插件
-      earthGroup: null, // 地球组模型
+      orbitControls: null, // 控制插件 -- 测试使用
+      guiControls: null, // GUI插件 -- 测试使用
+      earthGroup: null, // 地球组模型 -- 测试使用
+      satelliteMesh: null, // 卫星模型对象 -- 测试使用
+      sunMesh: null, // 太阳模型对象 -- 测试使用
       earthImage: require('../../assets/img/earth.jpg'),
       textureImg1: require('../../assets/img/universe_1.jpg'),
       textureImg2: require('../../assets/img/universe_2.jpg'),
@@ -47,7 +51,7 @@ export default {
     },
     initCamera () { // 照相机
       const k = window.innerWidth / window.innerHeight
-      this.camera = new Three.PerspectiveCamera(45, k, 1, 1000)
+      this.camera = new Three.PerspectiveCamera(45, k, 1, 2000)
       this.camera.position.set(120, -70, 130)
       // lookAt方法由于OrbitControls插件的原因已失效，直接调用OrbitControls内部target属性控制
     },
@@ -71,13 +75,14 @@ export default {
           const material = new Three.MeshPhysicalMaterial({
             map: texture
           })
-          const sunMesh = new Three.Mesh(sun, material)
-          sunMesh.position.x = 500
-          sunMesh.position.z = 700
-          this.scene.add(sunMesh)
+          this.sunMesh = new Three.Mesh(sun, material)
+          this.sunMesh.position.x = 500
+          this.sunMesh.position.z = 700
+          this.scene.add(this.sunMesh)
         })
       /* 地球组 */
       this.earthGroup = new Three.Group()
+      this.earthGroup.name = 'earthGroup'
       // 地球
       const earth = new Three.SphereGeometry(100, 100, 100)
       // 卫星
@@ -94,32 +99,35 @@ export default {
               const material = new Three.MeshPhysicalMaterial({
                 map: texture
               })
-              const satelliteMesh = new Three.Mesh(satellite, material)
-              satelliteMesh.position.x = 120
-              this.earthGroup.add(satelliteMesh)
+              this.satelliteMesh = new Three.Mesh(satellite, material)
+              this.satelliteMesh.name = 'satelliteMesh'
+              this.satelliteMesh.position.x = 120
+              this.earthGroup.add(this.satelliteMesh)
               this.scene.add(this.earthGroup)
+              // 渲染调用
+              this.render()
             })
-          // 渲染调用
-          this.render()
         })
     },
     init () { // 初始化
+      this.initStats()
+      this.initDatGUI()
       this.initScene()
-      this.initObject()
       this.initRenderer()
       this.initCamera()
       this.initLight()
-      this.initStats()
+      this.initObject()
       // 控制器
-      this.controls = new OrbitControls(this.camera, this.renderer.domElement)
-      this.controls.enableDamping = true
-      this.controls.target = new Three.Vector3(100, 10, 0)
+      this.orbitControls = new OrbitControls(this.camera, this.renderer.domElement)
+      this.orbitControls.enableDamping = true
+      this.orbitControls.target = new Three.Vector3(100, 10, 0)
     },
     render () { // 渲染
       this.stats.update()
-      this.earthGroup.rotation.y += 0.001
+      // Object3D属性控制
+      this.updateObject3D()
       this.renderer.render(this.scene, this.camera)
-      this.controls.update()
+      this.orbitControls.update()
       requestAnimationFrame(this.render)
     },
     initStats () { // 初始化性能监测插件
@@ -132,6 +140,31 @@ export default {
       this.stats.domElement.style.top = '100px'
       document.body.appendChild(this.stats.domElement)
     },
+    initDatGUI () {
+      this.guiControls = {
+        earthRotationSpeed: 0.001, // 地球旋转速度
+        satellitePositionX: 120, // 卫星X轴坐标
+        satellitePositionY: 0, // 卫星Y轴坐标
+        satellitePositionZ: 0, // 卫星Z轴坐标
+        sunPositionX: 500, // 太阳X轴坐标
+        sunPositionY: 0, // 太阳Y轴坐标
+        sunPositionZ: 700, // 太阳Z轴坐标
+        cameraPositionX: 120, // 照相机X轴坐标
+        cameraPositionY: -70, // 照相机Y轴坐标
+        cameraPositionZ: 130 // 照相机Z轴坐标
+      }
+      const gui = new dat.GUI()
+      gui.add(this.guiControls, 'earthRotationSpeed', 0, 0.2).name('地球旋转速度').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'satellitePositionX', 100, 500).name('卫星X轴坐标').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'satellitePositionY', 0, 200).name('卫星Y轴坐标').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'satellitePositionZ', 0, 200).name('卫星Z轴坐标').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'sunPositionX', 0, 1000).name('太阳X轴坐标').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'sunPositionY', 0, 1000).name('太阳Y轴坐标').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'sunPositionZ', 0, 1000).name('太阳Z轴坐标').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'cameraPositionX', 0, 2000).name('照相机X轴坐标').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'cameraPositionY', 0, 2000).name('照相机Y轴坐标').onChange(this.updateObject3D)
+      gui.add(this.guiControls, 'cameraPositionZ', 0, 2000).name('照相机Z轴坐标').onChange(this.updateObject3D)
+    },
     updatePerspective (target) { // 移动相机视角
       console.log(target)
       switch (target) {
@@ -140,13 +173,25 @@ export default {
             this.camera.position.set(item, 0, 0)
             console.log(item)
           })
-          this.controls.target = new Three.Vector3(0, 0, 0)
+          this.orbitControls.target = new Three.Vector3(0, 0, 0)
           break
         }
         default: {
           break
         }
       }
+    },
+    updateObject3D () {
+      this.earthGroup.rotation.y += this.guiControls.earthRotationSpeed
+      this.satelliteMesh.position.x = this.guiControls.satellitePositionX
+      this.satelliteMesh.position.y = this.guiControls.satellitePositionY
+      this.satelliteMesh.position.z = this.guiControls.satellitePositionZ
+      this.sunMesh.position.x = this.guiControls.sunPositionX
+      this.sunMesh.position.y = this.guiControls.sunPositionY
+      this.sunMesh.position.z = this.guiControls.sunPositionZ
+      this.camera.position.x = this.guiControls.cameraPositionX
+      this.camera.position.y = this.guiControls.cameraPositionY
+      this.camera.position.z = this.guiControls.cameraPositionZ
     }
   }
 }
