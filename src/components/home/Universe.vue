@@ -38,7 +38,7 @@ export default {
     })
   },
   mounted () {
-    this.init()
+    // this.init()
   },
   methods: {
     initRenderer () { // 渲染器
@@ -154,16 +154,24 @@ export default {
         cameraPositionZ: 130 // 照相机Z轴坐标
       }
       const gui = new dat.GUI()
-      gui.add(this.guiControls, 'earthRotationSpeed', 0, 0.2).name('地球旋转速度').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'satellitePositionX', 100, 500).name('卫星X轴坐标').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'satellitePositionY', 0, 200).name('卫星Y轴坐标').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'satellitePositionZ', 0, 200).name('卫星Z轴坐标').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'sunPositionX', 0, 1000).name('太阳X轴坐标').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'sunPositionY', 0, 1000).name('太阳Y轴坐标').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'sunPositionZ', 0, 1000).name('太阳Z轴坐标').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'cameraPositionX', 0, 2000).name('照相机X轴坐标').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'cameraPositionY', 0, 2000).name('照相机Y轴坐标').onChange(this.updateObject3D)
-      gui.add(this.guiControls, 'cameraPositionZ', 0, 2000).name('照相机Z轴坐标').onChange(this.updateObject3D)
+      // 地球组
+      const earthGroup = gui.addFolder('地球组')
+      earthGroup.add(this.guiControls, 'earthRotationSpeed', 0, 0.2).name('地球旋转速度').onChange(this.updateObject3D)
+      // 卫星组
+      const satelliteGroup = gui.addFolder('卫星组')
+      satelliteGroup.add(this.guiControls, 'satellitePositionX', 100, 500).name('卫星X轴坐标').onChange(this.updateObject3D)
+      satelliteGroup.add(this.guiControls, 'satellitePositionY', 0, 200).name('卫星Y轴坐标').onChange(this.updateObject3D)
+      satelliteGroup.add(this.guiControls, 'satellitePositionZ', 0, 200).name('卫星Z轴坐标').onChange(this.updateObject3D)
+      // 太阳组
+      const sunGroup = gui.addFolder('太阳组')
+      sunGroup.add(this.guiControls, 'sunPositionX', 0, 1000).name('太阳X轴坐标').onChange(this.updateObject3D)
+      sunGroup.add(this.guiControls, 'sunPositionY', 0, 1000).name('太阳Y轴坐标').onChange(this.updateObject3D)
+      sunGroup.add(this.guiControls, 'sunPositionZ', 0, 1000).name('太阳Z轴坐标').onChange(this.updateObject3D)
+      // 照相机组
+      const cameraGroup = gui.addFolder('照相机组')
+      cameraGroup.add(this.guiControls, 'cameraPositionX', 0, 2000).name('照相机X轴坐标').onChange(this.updateObject3D)
+      cameraGroup.add(this.guiControls, 'cameraPositionY', 0, 2000).name('照相机Y轴坐标').onChange(this.updateObject3D)
+      cameraGroup.add(this.guiControls, 'cameraPositionZ', 0, 2000).name('照相机Z轴坐标').onChange(this.updateObject3D)
     },
     updatePerspective (target) { // 移动相机视角
       console.log(target)
@@ -183,15 +191,21 @@ export default {
     },
     updateObject3D () {
       this.earthGroup.rotation.y += this.guiControls.earthRotationSpeed
-      this.satelliteMesh.position.x = this.guiControls.satellitePositionX
-      this.satelliteMesh.position.y = this.guiControls.satellitePositionY
-      this.satelliteMesh.position.z = this.guiControls.satellitePositionZ
-      this.sunMesh.position.x = this.guiControls.sunPositionX
-      this.sunMesh.position.y = this.guiControls.sunPositionY
-      this.sunMesh.position.z = this.guiControls.sunPositionZ
-      this.camera.position.x = this.guiControls.cameraPositionX
-      this.camera.position.y = this.guiControls.cameraPositionY
-      this.camera.position.z = this.guiControls.cameraPositionZ
+      this.satelliteMesh.position.set(
+        this.guiControls.satellitePositionX,
+        this.guiControls.satellitePositionY,
+        this.guiControls.satellitePositionZ
+      )
+      this.sunMesh.position.set(
+        this.guiControls.sunPositionX,
+        this.guiControls.sunPositionY,
+        this.guiControls.sunPositionZ
+      )
+      this.camera.position.set(
+        this.guiControls.cameraPositionX,
+        this.guiControls.cameraPositionY,
+        this.guiControls.cameraPositionZ
+      )
     }
   }
 }

@@ -1,0 +1,9 @@
+@font-face {
+  font-family: 'ITCBLKAD';
+  src: url-loader('../../static/font/fontawesome-webfont.eot');
+  src: url-loader('../../static/font/fontawesome-webfont?#iefix') format('embedded-opentype'),
+    url-loader('../../static/font/fontawesome-webfont.woff') format('woff'),
+    url-loader('../../static/font/fontawesome-webfont.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
