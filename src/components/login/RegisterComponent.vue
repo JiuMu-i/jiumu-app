@@ -1,14 +1,68 @@
 <template>
   <div class="bgcontainer">
-    <div class="logo"></div>
-    <div class="bubble"></div>
-    <div class="register-container"></div>
+    <div class="layout">
+      <div class="logo"></div>
+      <!-- 气泡 -->
+      <div class="bubble">
+        <div
+          v-for="(item, index) in bubbleNum"
+          :key="index"
+          :style="[bubbleColor(), bubblePosition(), bubbleRadius()]">
+        </div>
+      </div>
+      <!-- 注册框容器 -->
+      <div class="register-container">
+        <customize-fieldset title="注册"></customize-fieldset>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+const CustomizeFieldset = () => require('../common/Fieldset')
+
 export default {
-  name: 'register-component'
+  name: 'register-component',
+  data () {
+    return {
+      bubbleNum: Math.floor(Math.random() * 20 + 30)
+    }
+  },
+  computed: {
+    CustomizeFieldset
+  },
+  mounted () {},
+  methods: {
+    /**
+     * 使用函数计算是为了绕开computed的计算缓存
+     * 目前没有找到办法完全用sass语法来控制，不能做到更新赋值
+     * */
+    // 计算气泡颜色与透明度
+    bubbleColor () {
+      let opacity = Math.random()
+      if (opacity < 0.2) opacity = 0.2
+      else if (opacity > 0.7) opacity = 0.7
+
+      return {
+        backgroundColor: `rgba(8, 163, 229, ${opacity})`
+      }
+    },
+    // 计算气泡坐标位置
+    bubblePosition () {
+      return {
+        marginTop: `${window.innerHeight * Math.random()}px`,
+        marginLeft: `${window.innerWidth * 0.625 * Math.random()}px`
+      }
+    },
+    // 计算气泡半径
+    bubbleRadius () {
+      const radius = Math.random() * 10 + 10
+      return {
+        width: `${radius}px`,
+        height: `${radius}px`
+      }
+    }
+  }
 }
 </script>
 
@@ -25,9 +79,26 @@ export default {
   background-position: center 0;
   z-index: -9;
 }
+.layout{
+  display: grid;
+  grid-template-columns: [column1] 18.75vw [column2] 62.5vw [column3] 18.75vw [column4];
+  grid-template-rows: [row1] 22.03vh [row2] 77.87vh [row3];
+}
 .bubble{
-  width: 600px;
-  height: 100%;
-  margin: auto 0;
+  grid-column-start: column2;
+  grid-column-end: column3;
+  grid-row-start: row1;
+  grid-row-end: row3;
+  z-index: -8;
+  > div{
+    position: absolute;
+    border-radius: 50px;
+  }
+}
+.register-container{
+  grid-column-start: column2;
+  grid-column-end: column3;
+  grid-row-start: row2;
+  grid-row-end: row3;
 }
 </style>
