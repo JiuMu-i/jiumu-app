@@ -31,12 +31,13 @@ export default{
 }
 </script>
 
-<style lang="sass" scoped>
-.logo
+<style lang="scss" scoped>
+.logo {
   position: absolute;
   width: 40px;
   height: 40px;
   margin: 30px 0 0 40px;
   border-radius: 50px;
   background: #000000;
+}
 </style>

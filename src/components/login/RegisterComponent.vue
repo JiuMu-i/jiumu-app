@@ -1,7 +1,14 @@
 <template>
   <div class="bgcontainer">
     <div class="layout">
-      <div class="logo"></div>
+      <div class="logo">
+        <embed
+          :src="logo_url"
+          type="image/svg+xml"
+          width="189"
+          height="60"
+          style="margin: 9.4% 0px 0px 8%;"/>
+      </div>
       <!-- 气泡 -->
       <div class="bubble">
         <div
@@ -13,25 +20,91 @@
       <!-- 注册框容器 -->
       <div class="register-container">
         <customize-fieldset title="注册"></customize-fieldset>
+        <el-row
+          type="flex"
+          justify="center">
+          <el-col :span="12" class="register-form">
+            <!-- element的input框输入值时会导致页面重新渲染，替换为自己封装的 -->
+            <!-- 账号 -->
+            <el-input
+              v-model="register.name"
+              placeholder="请输入用户名"
+              class="input-bottom-space">
+              <font-awesome-icon
+                slot="prefix"
+                :icon="['fas', 'user']"
+                class="login-icon"></font-awesome-icon>
+            </el-input>
+            <!-- 密码 -->
+            <el-input
+              v-model="register.password"
+              placeholder="请输入密码"
+              class="input-bottom-space">
+              <font-awesome-icon
+                slot="prefix"
+                :icon="['fas', 'unlock-alt']"
+                class="login-icon"></font-awesome-icon>
+            </el-input>
+            <!-- 确认密码 -->
+            <el-input
+              v-model="register.confirmPassword"
+              placeholder="请确认密码"
+              class="input-bottom-space">
+              <font-awesome-icon
+                slot="prefix"
+                :icon="['fas', 'unlock-alt']"
+                class="login-icon"></font-awesome-icon>
+            </el-input>
+            <!-- 手机号 -->
+            <el-input
+              v-model="register.phoneNumber"
+              placeholder="请输入常用手机号"
+              class="input-bottom-space">
+              <font-awesome-icon
+                slot="prefix"
+                :icon="['fas', 'mobile-alt']"
+                class="login-icon"></font-awesome-icon>
+            </el-input>
+            <!-- 验证码 -->
+            <el-input
+              v-model="register.verificationCode"
+              placeholder="请输入短信验证码"
+              class="input-bottom-space">
+              <font-awesome-icon
+                slot="prefix"
+                :icon="['fas', 'code']"
+                class="login-icon"></font-awesome-icon>
+            </el-input>
+          </el-col>
+        </el-row>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-const CustomizeFieldset = () => require('../common/Fieldset')
+import CustomizeFieldset from '../common/CustomizeFieldset'
 
 export default {
   name: 'register-component',
   data () {
     return {
-      bubbleNum: Math.floor(Math.random() * 20 + 30)
+      bubbleNum: Math.floor(Math.random() * 20 + 30), // 气泡随机数
+      logo_url: require('../../assets/jiumu.svg'),
+      register: {
+        name: '',
+        password: '',
+        confirmPassword: '',
+        phoneNumber: '',
+        verificationCode: ''
+      }
     }
   },
-  computed: {
+  components: {
     CustomizeFieldset
   },
   mounted () {},
+  computed: {},
   methods: {
     /**
      * 使用函数计算是为了绕开computed的计算缓存
@@ -100,5 +173,15 @@ export default {
   grid-column-end: column3;
   grid-row-start: row2;
   grid-row-end: row3;
+}
+.register-form{
+  padding-top: 82px;
+}
+.input-bottom-space {
+  margin-bottom: 33px;
+}
+.login-icon{
+  font-size: 24px;
+  padding: 15px 0 0 24px;
 }
 </style>
