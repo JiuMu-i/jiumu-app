@@ -8,7 +8,7 @@
         height="50"
         style="margin: -6px 0 0 -5px;"/>
     </div>
-    <login-component></login-component>
+    <login-component @routerTo="routerTo"></login-component>
     <universe></universe>
   </div>
 </template>
@@ -26,6 +26,11 @@ export default{
   data () {
     return {
       logo_url: require('../assets/logo.svg')
+    }
+  },
+  methods: {
+    routerTo () {
+      this.$router.push({ path: '/register' })
     }
   }
 }

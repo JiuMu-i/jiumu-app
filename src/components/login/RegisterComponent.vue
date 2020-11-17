@@ -24,57 +24,46 @@
           type="flex"
           justify="center">
           <el-col :span="12" class="register-form">
-            <!-- element的input框输入值时会导致页面重新渲染，替换为自己封装的 -->
             <!-- 账号 -->
-            <el-input
-              v-model="register.name"
-              placeholder="请输入用户名"
+            <cus-input
+              inputPlaceholder="请输入用户名"
               class="input-bottom-space">
               <font-awesome-icon
-                slot="prefix"
                 :icon="['fas', 'user']"
                 class="login-icon"></font-awesome-icon>
-            </el-input>
+            </cus-input>
             <!-- 密码 -->
-            <el-input
-              v-model="register.password"
-              placeholder="请输入密码"
+            <cus-input
+              inputPlaceholder="请输入密码"
               class="input-bottom-space">
               <font-awesome-icon
-                slot="prefix"
                 :icon="['fas', 'unlock-alt']"
                 class="login-icon"></font-awesome-icon>
-            </el-input>
+            </cus-input>
             <!-- 确认密码 -->
-            <el-input
-              v-model="register.confirmPassword"
-              placeholder="请确认密码"
+            <cus-input
+              inputPlaceholder="请确认密码"
               class="input-bottom-space">
               <font-awesome-icon
-                slot="prefix"
                 :icon="['fas', 'unlock-alt']"
                 class="login-icon"></font-awesome-icon>
-            </el-input>
+            </cus-input>
             <!-- 手机号 -->
-            <el-input
-              v-model="register.phoneNumber"
-              placeholder="请输入常用手机号"
+            <cus-input
+              inputPlaceholder="请输入常用手机号"
               class="input-bottom-space">
               <font-awesome-icon
-                slot="prefix"
                 :icon="['fas', 'mobile-alt']"
                 class="login-icon"></font-awesome-icon>
-            </el-input>
+            </cus-input>
             <!-- 验证码 -->
-            <el-input
-              v-model="register.verificationCode"
-              placeholder="请输入短信验证码"
+            <cus-input
+              inputPlaceholder="请输入短信验证码"
               class="input-bottom-space">
               <font-awesome-icon
-                slot="prefix"
                 :icon="['fas', 'code']"
                 class="login-icon"></font-awesome-icon>
-            </el-input>
+            </cus-input>
           </el-col>
         </el-row>
       </div>
@@ -84,6 +73,7 @@
 
 <script>
 import CustomizeFieldset from '../common/CustomizeFieldset'
+import CusInput from '../common/CusInput'
 
 export default {
   name: 'register-component',
@@ -101,7 +91,8 @@ export default {
     }
   },
   components: {
-    CustomizeFieldset
+    CustomizeFieldset,
+    CusInput
   },
   mounted () {},
   computed: {},

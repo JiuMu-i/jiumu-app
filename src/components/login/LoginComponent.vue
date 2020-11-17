@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- 登录框 -->
     <canvas id="login" width="780" height="470" class="canvas-class"></canvas>
     <div class="panel-main">
       <el-row
@@ -90,9 +91,7 @@ export default{
       eventBus.$emit('removePerspective', this.$store.state.perspectiveType.login)
     },
     register () {
-      this.$router.push({
-        path: '/register'
-      })
+      this.$emit('routerTo')
     },
     initCanvas () {
       const canvas = document.getElementById('login')

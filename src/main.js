@@ -15,8 +15,11 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import solid from '@fortawesome/fontawesome-free-solid'
 import regular from '@fortawesome/fontawesome-free-regular'
 import brands from '@fortawesome/fontawesome-free-brands'
+// animate
+import animate from 'animate.css'
 
 Vue.use(ElementUI)
+Vue.use(animate)
 Vue.config.productionTip = false
 Vue.prototype.$axios = axios
 
